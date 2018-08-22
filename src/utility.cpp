@@ -23,6 +23,7 @@ SOFTWARE.
 #include <set>
 #include <sstream>
 #include <filesystem>
+#include <iomanip>
 
 namespace logger_impl
 {
@@ -88,13 +89,19 @@ namespace logger_impl
 
 	bool pathname_is_valid(const std::string& name)
 	{
-		if ((name.length() > _MAX_PATH) || (str_contains_one_of_symbols(name, "\\:*?\"<>|"))) return false;
+#ifdef _WIN32 
+		if (name.length() > _MAX_PATH) return false;
+#endif
+        if (str_contains_one_of_symbols(name, "\\:*?\"<>|")) return false;
 		else return true;
 	}
 
 	bool filename_is_valid(const std::string& name)
 	{
-		if ((name.length() > _MAX_PATH) || (str_contains_one_of_symbols(name, "\\:*?\"<>|/"))) return false;
+#ifdef _WIN32 
+		if (name.length() > _MAX_PATH) return false;
+#endif
+		if (str_contains_one_of_symbols(name, "\\:*?\"<>|/")) return false;
 		else return true;
 	}
 }

@@ -16,17 +16,20 @@
 # SOFTWARE.
 
 cmake_minimum_required(VERSION 3.11)
-project(Logger)
+project(logger)
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+if (WIN32)
+    set(LOGGER_TARGET_LIBRARY_NAME "${PROJECT_NAME}.lib")
+else() 
+    set(LOGGER_TARGET_LIBRARY_NAME "lib${PROJECT_NAME}.a")
+endif()
 
-set(SOURCE_FILES
-	src/logger.cpp
-    src/logger_impl.cpp
-	src/utility.cpp)
-add_library(Logger ${SOURCE_FILES})
-set_property(TARGET Logger PROPERTY LIBRARY_OUTPUT_DIRECTORY "C:\\Users\\oyyablokov\\MyProjects\\cpp-logger\\temp")
+set(LOGGER_SOURCE_FILES
+    ${CMAKE_CURRENT_LIST_DIR}/src/logger.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/src/logger_impl.cpp
+	${CMAKE_CURRENT_LIST_DIR}/src/utility.cpp)
+add_library(${PROJECT_NAME} ${LOGGER_SOURCE_FILES})
+target_link_libraries(${PROJECT_NAME} stdc++fs pthread)
+

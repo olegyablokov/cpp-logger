@@ -31,7 +31,7 @@ The logger will create a "test.log" file under "./log/\<date\>/" directory and t
 ```
 
 ## Build
-The project is configured with CMake. To build the library, do the following:
+The project is configured with [CMake](https://cmake.org/). To build the library, do the following:
 ```
 cd path/to/this/project; mkdir build; cd build          # Make a build directory.
 cmake ..    		                                # Generate a Makefile.
@@ -39,16 +39,16 @@ make                                                    # Build the program.
 ```
 
 ## Tests
-To run tests, execute the following commands:
+Tests are managed with [Catch](https://github.com/catchorg/Catch2). To run tests, execute the following commands:
 ```
 cd path/to/this/project/tests; mkdir build; cd build    # Make a build directory.
 cmake ..    		                                # Generate a Makefile.
 make                                                    # Build the program.
 ```
-Note that the tests need to statically link against a compiled logger library. If you encounter problems with it, check CMakeLists.txt and the location of the library file.
+Note that the tests need to be statically linked against a compiled logger library (read "Build" section above to learn how to make the library file).
 
 ## License
-The library is distributed under MIT License which means you can freely use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the "Software" as described in the LICENSE file.
+The library is distributed under MIT License which means you can freely use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the "Software" as described in the [LICENSE file](https://github.com/oyyablokov/cpp-logger/blob/master/LICENSE).
 
 ## FAQ
 **Q: Cannot build the library. I get errors about filesystem like "fatal error: filesystem: No such file or directory
