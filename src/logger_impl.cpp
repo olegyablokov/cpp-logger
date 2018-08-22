@@ -20,17 +20,25 @@ SOFTWARE.
 #include "logger_impl.h"
 #include "utility.h"
 
+#include <filesystem>
 #include <fstream>
 
 namespace logger_impl
 {
 	LoggerImpl::LoggerImpl(const std::string& log_name, const std::string& log_dir, std::chrono::milliseconds logging_freq) :
-		Logger(log_name, log_dir, logging_freq), m_LoggerSettings{log_name, log_dir, logging_freq} {};
+		Logger(log_name, log_dir, logging_freq), m_LoggerSettings{ log_name, log_dir, logging_freq }
+	{
+		if (log_dir == "") m_LoggerSettings.log_dir = ".";
+		std::string test_dir = m_LoggerSettings.log_dir + "/" + get_current_date();
+		if (filename_is_valid(test_dir)) throw std::invalid_argument("Filename \"" + test_dir + "\" is not valid");
+		if (filename_is_valid(log_name)) throw std::invalid_argument("Filename \"" + log_name + "\" is not valid");
 
-	void LoggerImpl::write(const std::string& msg, MsgType&& type) noexcept
+	};
+
+	void LoggerImpl::write(const std::string& msg, MsgType&& type)
 	{
 		std::lock_guard<std::mutex> lock(m_WriteMutex);
-		m_LogEntries.push(LogEntry{ msg, type, get_current_time() });
+		m_LogEntries.push(LogEntry{ msg, type, get_current_time(), get_current_date() });
 	}
 
 	void LoggerImpl::start() noexcept
@@ -58,25 +66,35 @@ namespace logger_impl
 
 	void LoggerImpl::run()
 	{
+		std::string prev_dir, prev_file_name;
+		std::string cur_dir, cur_file_name;
+		std::string log_msgs;
 		while (m_IsStarted.load())
 		{
-			if (!m_LogEntries.empty())
+			while (!m_LogEntries.empty())
 			{
-				std::string dir = m_LoggerSettings.log_dir + "/" + get_current_date();
-				std::string file_name = dir + "/" + m_LoggerSettings.log_name;
-				std::filesystem::create_directories(dir);
-				std::ofstream file(file_name.c_str(), std::ofstream::app);
+				std::lock_guard<std::mutex> lock(m_WriteMutex);
 
-				m_WriteMutex.lock();
-				while (!m_LogEntries.empty())
+				auto const& entry = m_LogEntries.front();
+				cur_dir = m_LoggerSettings.log_dir + "/" + entry.date;
+				cur_file_name = cur_dir + "/" + m_LoggerSettings.log_name;
+
+				if (cur_file_name == prev_file_name || prev_file_name == "")
 				{
-					auto const& entry = m_LogEntries.front();
-					file << entry.time << " " << get_msg_type_name(entry.type) << ":\t" << entry.msg << std::endl;
-					m_LogEntries.pop();
 				}
-				m_WriteMutex.unlock();
+				else
+				{
+					std::filesystem::create_directories(prev_dir);
+					std::ofstream file(prev_file_name.c_str(), std::ofstream::app);
+					file << log_msgs;
+					file.close();
+					log_msgs = "";
+				}
+				log_msgs += entry.time + " " + get_msg_type_name(entry.type) + ":\t" + entry.msg + "\n";
 
-				file.close();
+				prev_dir = cur_dir;
+				prev_file_name = cur_file_name;
+				m_LogEntries.pop();
 			}
 			std::this_thread::sleep_for(m_LoggerSettings.logging_freq);
 		}

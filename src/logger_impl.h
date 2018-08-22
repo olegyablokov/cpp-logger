@@ -35,6 +35,7 @@ namespace logger_impl
 		std::string msg;
 		Logger::MsgType type;
 		std::string time;
+		std::string date;
 	};
 
 	class LoggerImpl : public Logger
@@ -45,7 +46,7 @@ namespace logger_impl
 			std::chrono::milliseconds logging_freq = std::chrono::milliseconds(500));
 		virtual ~LoggerImpl() {};
 
-		virtual void write(const std::string& msg, MsgType&& type = MsgType::INFO) noexcept override;
+		virtual void write(const std::string& msg, MsgType&& type = MsgType::INFO) override;
 		virtual void start() noexcept override;
 		virtual void stop() noexcept override;
 		virtual bool is_started() const noexcept override;

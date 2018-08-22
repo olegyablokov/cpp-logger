@@ -30,7 +30,7 @@ class Logger
 public:
 	/**
 	* @brief Message type written in a log file along with the message.
-	* If you want to add your own types, don't forget to update the logger_impl::get_msg_type_name(...) function in utility.h.
+	* Note: If you want to add your own types, don't forget to update the logger_impl::get_msg_type_name(...) function in utility.cpp.
 	*/
 	enum MsgType
 	{
@@ -56,9 +56,9 @@ public:
 		std::chrono::milliseconds logging_freq = std::chrono::milliseconds(500));
 
 	/**
-	* @brief The thread-safe method for writing a log entry. 
+	* @brief The method for writing a log entry. 
 	*/
-	virtual void write(const std::string& msg, MsgType&& type = MsgType::INFO) noexcept = 0;
+	virtual void write(const std::string& msg, MsgType&& type = MsgType::INFO) = 0;
 
 	/**
 	* @brief The method which starts logging or resumes it if it has been stopped with the stop() method.

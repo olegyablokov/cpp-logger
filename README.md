@@ -1,10 +1,10 @@
 ## Getting started
-This is a fast thread-safe standalone C++17 library for logging.
+This is a fast, easy-to-use, thread-safe, standalone C++17 library for logging.
 
 ## Usage
 To use the logger, do the following:
 
-0. Link the compiled library to your CMake-configured project (read "Build" section below):
+1. Link the compiled library to your CMake-configured project (read "Build" section below):
 ```
 target_link_libraries(<project_name>, path/to/build/<lib_name>)
 ```
@@ -38,6 +38,15 @@ cmake ..    		                                # Generate a Makefile.
 make                                                    # Build the program.
 ```
 
+## Tests
+To run tests, execute the following commands:
+```
+cd path/to/this/project/tests; mkdir build; cd build    # Make a build directory.
+cmake ..    		                                # Generate a Makefile.
+make                                                    # Build the program.
+```
+Note that the tests need to statically link against a compiled logger library. If you encounter problems with it, check CMakeLists.txt and the location of the library file.
+
 ## License
 The library is distributed under MIT License which means you can freely use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the "Software" as described in the LICENSE file.
 
@@ -49,5 +58,4 @@ compilation terminated.". What shall I do?**
 <br><br>
 **Q: Is this logger thread-safe?**
 
-**A:** Yes, it is thread-safe: log entries are thread-safely stored in a container and once in a user-defined time interval logger's worker thread locks the container and writes its content to a file, then clears it.<br>
-Threads are managed with std::thread.
+**A:** Yes, it is thread-safe: log entries are thread-safely stored in a container and once in a user-defined time interval logger's worker thread locks the container and writes its content to a file, then clears the container. Threads are managed with std::thread.

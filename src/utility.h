@@ -18,56 +18,16 @@ SOFTWARE.
 **/
 
 #pragma once
+#include "../logger.h"
+
 #include <string>
-#include <chrono>
-#include <sstream>
-#include <filesystem>
 
 namespace logger_impl
 {
-	std::string get_msg_type_name(const Logger::MsgType& type)
-	{
-		if (type == Logger::MsgType::INFO) return "INFO";
-		if (type == Logger::MsgType::DEBUG) return "DEBUG";
-		if (type == Logger::MsgType::WARNING) return "WARNING";
-		if (type == Logger::MsgType::FATAL) return "FATAL";
-		if (type == Logger::MsgType::TRACE) return "TRACE";
-		if (type == Logger::MsgType::ERROR) return "ERROR";
-		if (type == Logger::MsgType::ALERT) return "ALERT";
-		if (type == Logger::MsgType::CRITICAL) return "CRITICAL";
-		if (type == Logger::MsgType::NOTICE) return "NOTICE";
-	}
-
-	std::string get_current_date()
-	{
-		std::chrono::time_point<std::chrono::system_clock> time_now = std::chrono::system_clock::now();
-		std::time_t time_now_t = std::chrono::system_clock::to_time_t(time_now);
-		std::tm now_tm = *std::localtime(&time_now_t);
-
-		std::stringstream ss;
-		ss << std::put_time(&now_tm, "%Y.%m.%d");
-		return ss.str();
-	}
-
-	std::string get_current_time()
-	{
-		auto now = std::chrono::system_clock::now();
-		auto seconds = std::chrono::time_point_cast<std::chrono::seconds>(now);
-		auto fraction = now - seconds;
-		time_t cnow = std::chrono::system_clock::to_time_t(now);
-		auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(fraction).count();
-		std::string ms_str;
-		if (milliseconds < 10) ms_str = "00" + std::to_string(milliseconds);
-		else if (milliseconds < 100) ms_str = "0" + std::to_string(milliseconds);
-		else ms_str = std::to_string(milliseconds);
-
-		std::chrono::time_point<std::chrono::system_clock> time_now = std::chrono::system_clock::now();
-		std::time_t time_now_t = std::chrono::system_clock::to_time_t(time_now);
-		std::tm now_tm = *std::localtime(&time_now_t);
-
-		std::stringstream ss;
-		ss << std::put_time(&now_tm, "[%H:%M:%S:") << ms_str << "]";
-
-		return ss.str();
-	}
+	std::string get_msg_type_name(const Logger::MsgType& type);
+	std::string get_current_date();
+	std::string get_current_time();
+	bool str_contains_one_of_symbols(const std::string& str, const std::string& symbols);
+	bool filename_is_valid(const std::string& name);
+	bool pathname_is_valid(const std::string& name);
 }
