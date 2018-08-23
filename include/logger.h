@@ -18,7 +18,7 @@ SOFTWARE.
 **/
 
 #pragma once
-#include "src/logger_settings.h"
+#include "logger_settings.h"
 
 /**
 * @brief The interface class for logging.

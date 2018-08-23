@@ -16,14 +16,12 @@
 # SOFTWARE.
 
 cmake_minimum_required(VERSION 3.11)
-project(logger_global_project)
+project(logger)
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin)
+add_library(logger logger.cpp logger_impl.cpp utility.cpp)
+set_target_properties(logger PROPERTIES CXX_STANDARD 17)
 
-include_directories(${CMAKE_SOURCE_DIR}/include)
-
-add_subdirectory(src)
-add_subdirectory(tests EXCLUDE_FROM_ALL)
+if (UNIX)
+    target_link_libraries(logger stdc++fs pthread)
+endif (UNIX)
 

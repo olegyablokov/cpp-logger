@@ -16,25 +16,10 @@
 # SOFTWARE.
 
 cmake_minimum_required(VERSION 3.11)
-include(${CMAKE_CURRENT_SOURCE_DIR}/../CMakeLists.txt)
-project(logger_test)
+project(logger_tests)
 
-set(CMAKE_CXX_STANDARD 17)
+add_executable(logger_tests main.cpp logger_tests.cpp )
+set_target_properties(logger_tests PROPERTIES CXX_STANDARD 17)
 
-set(LOGGER_TARGET_LIBRARY_PATH "${CMAKE_CURRENT_LIST_DIR}/../build")
-set(LOGGER_TEST_SOURCE_FILES 
-    ${CMAKE_CURRENT_LIST_DIR}/main.cpp 
-    ${CMAKE_CURRENT_LIST_DIR}/logger_tests.cpp)
-add_executable(${PROJECT_NAME} ${LOGGER_TEST_SOURCE_FILES})
-
-# Linking against the logger library
-set(LOGGER_LIB_NAME "${LOGGER_TARGET_LIBRARY_PATH}/${LOGGER_TARGET_LIBRARY_NAME}")
-message("Logger library path is set to ${LOGGER_LIB_NAME}. If you want to change it, modify the tests/CMakeLists.txt file.")
-if(NOT EXISTS ${LOGGER_LIB_NAME})
-    message(FATAL_ERROR "Couldn't find the logger library file. Check that it exists and its location is ${LOGGER_LIB_NAME}.")
-endif()
-
-message("Trying to load the library...")
-target_link_libraries(${PROJECT_NAME} ${LOGGER_LIB_NAME} stdc++fs pthread)
-message("Logger library successfully loaded.")
+target_link_libraries(logger_tests logger)
 

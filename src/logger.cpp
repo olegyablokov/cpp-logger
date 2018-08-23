@@ -17,7 +17,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 **/
 
-#include "../logger.h"
+#include <logger.h>
 #include "logger_impl.h"
 
 Logger* Logger::create(const std::string& log_name, const std::string& log_dir, std::chrono::milliseconds logging_freq) {

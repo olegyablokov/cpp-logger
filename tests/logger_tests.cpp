@@ -1,12 +1,12 @@
 #include "catch.hpp"
-#include "../logger.h"
+#include <logger.h>
+#include "../src/utility.h"
 #include "utility_tests.h"
 
 #include <thread>
 #include <chrono>
 
 #include <iostream>
-#include "../src/utility.h"
 
 TEST_CASE("Log files can be created in current directory", "[logger]")
 {
