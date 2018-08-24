@@ -18,8 +18,11 @@
 cmake_minimum_required(VERSION 3.11)
 project(logger_tests)
 
-add_executable(logger_tests main.cpp logger_tests.cpp )
+add_executable(logger_tests main.cpp logger_tests.cpp)
 set_target_properties(logger_tests PROPERTIES CXX_STANDARD 17)
 
 target_link_libraries(logger_tests logger)
 
+if (UNIX)
+    target_link_libraries(logger_tests stdc++fs)
+endif (UNIX)

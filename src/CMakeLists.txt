@@ -24,4 +24,3 @@ set_target_properties(logger PROPERTIES CXX_STANDARD 17)
 if (UNIX)
     target_link_libraries(logger stdc++fs pthread)
 endif (UNIX)
-

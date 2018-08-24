@@ -38,7 +38,7 @@ namespace logger_impl
 		else if (type == Logger::MsgType::ALERT) return "ALERT";
 		else if (type == Logger::MsgType::CRITICAL) return "CRITICAL";
 		else if (type == Logger::MsgType::NOTICE) return "NOTICE";
-		else throw(std::logic_error("Unknown Logger::MsgType. Did you forget to register it in logger_impl::get_msg_type_name(...)?"));
+		else throw(std::logic_error("Unknown Logger::MsgType. Have you registered it in logger_impl::get_msg_type_name(...)?"));
 	}
 
 	std::string get_current_date()
@@ -77,31 +77,13 @@ namespace logger_impl
 	bool str_contains_one_of_symbols(const std::string& str, const std::string& symbols)
 	{
 		std::set<char> symbols_set;
-		for (auto& c : symbols) symbols_set.insert(c);
+		for (auto& symbol : symbols) symbols_set.insert(symbol);
 		bool is_in = false;
-		for (auto& c : str)
+		for (auto& symbol : str)
 		{
-			is_in = (symbols_set.find(c) != symbols_set.end());
+			is_in = (symbols_set.find(symbol) != symbols_set.end());
 			if (is_in) break;
 		};
 		return is_in;
-	}
-
-	bool pathname_is_valid(const std::string& name)
-	{
-#ifdef _WIN32 
-		if (name.length() > _MAX_PATH) return false;
-#endif
-        if (str_contains_one_of_symbols(name, "\\:*?\"<>|")) return false;
-		else return true;
-	}
-
-	bool filename_is_valid(const std::string& name)
-	{
-#ifdef _WIN32 
-		if (name.length() > _MAX_PATH) return false;
-#endif
-		if (str_contains_one_of_symbols(name, "\\:*?\"<>|/")) return false;
-		else return true;
 	}
 }

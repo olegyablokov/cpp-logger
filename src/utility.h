@@ -28,6 +28,4 @@ namespace logger_impl
 	std::string get_current_date();
 	std::string get_current_time();
 	bool str_contains_one_of_symbols(const std::string& str, const std::string& symbols);
-	bool filename_is_valid(const std::string& name);
-	bool pathname_is_valid(const std::string& name);
 }

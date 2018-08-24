@@ -22,15 +22,14 @@ SOFTWARE.
 
 /**
 * @brief The interface class for logging.
-* Don't try to call its' constructor directly as this class provides no implementation. 
-* Instead, use the static Logger* create(...) function.
+* @note Don't try to call its constructor directly as this class provides no implementation. Instead, use the static Logger* Logger::create(...) method.
 */
 class Logger
 {
 public:
 	/**
 	* @brief Message type written in a log file along with the message.
-	* Note: If you want to add your own types, don't forget to update the logger_impl::get_msg_type_name(...) function in utility.cpp.
+	* @note If you want to add your own types, don't forget to update the logger_impl::get_msg_type_name(...) function in utility.cpp.
 	*/
 	enum MsgType
 	{
@@ -49,7 +48,7 @@ public:
 
 	/**
 	* @brief The factory method of this class. Use it to create your own logger object.
-	* Note that the logger won't start until the start() method is called.
+	* @note The logger won't start until the start() method is called.
 	*/
 	static Logger* create(const std::string& log_name = "name.log",
 		const std::string& log_dir = ".",
@@ -57,20 +56,28 @@ public:
 
 	/**
 	* @brief The method for writing a log entry. 
+	* @note Log files are created only when there is something to write into them.
+	* @note If the logger is stopped (is_started() == false) all the messages passed to this method are dropped.
 	*/
 	virtual void write(const std::string& msg, MsgType&& type = MsgType::INFO) = 0;
 
 	/**
 	* @brief The method which starts logging or resumes it if it has been stopped with the stop() method.
 	*/
-	virtual void start() noexcept = 0;
+	virtual void start() = 0;
 
 	/**
-	* @brief The method which stops logging. Note that the logger will write all the messages which had been given to it before this method was called.
+	* @brief The method which stops logging. 
+	* @note The logger will write all the messages which had been given to it before this method was called.
+	* @note This method is blocking: it will not return until logging is stopped.
 	*/
-	virtual void stop() noexcept = 0;
+	virtual void stop() = 0;
 
-	virtual bool is_started() const noexcept = 0;
+	/**
+	* @brief The methods which returns true if logging is enabled and false otherwise.
+	*/
+	virtual bool is_running() const noexcept = 0;
+
 	virtual LoggerSettings get_settings() const noexcept = 0;
 
 protected:

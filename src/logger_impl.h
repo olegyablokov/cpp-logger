@@ -47,18 +47,19 @@ namespace logger_impl
 		virtual ~LoggerImpl() {};
 
 		virtual void write(const std::string& msg, MsgType&& type = MsgType::INFO) override;
-		virtual void start() noexcept override;
-		virtual void stop() noexcept override;
-		virtual bool is_started() const noexcept override;
+		virtual void start() override;
+		virtual void stop() override;
+		virtual bool is_running() const noexcept override;
 		virtual LoggerSettings get_settings() const noexcept override;
 
 	private:
 		void run();
-
+		void flush_log_entries_to_file();
+		
 		std::unique_ptr<std::thread> m_WriterThread;
 		std::mutex m_WriteMutex;
 		std::queue<LogEntry> m_LogEntries;
-		std::atomic<bool> m_IsStarted;
+		std::atomic<bool> m_IsRunning;
 
 		LoggerSettings m_LoggerSettings;
 	};

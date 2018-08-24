@@ -29,34 +29,41 @@ namespace logger_impl
 		Logger(log_name, log_dir, logging_freq), m_LoggerSettings{ log_name, log_dir, logging_freq }
 	{
 		if (log_dir == "") m_LoggerSettings.log_dir = ".";
-		std::string test_dir = m_LoggerSettings.log_dir + "/" + get_current_date();
-		if (filename_is_valid(test_dir)) throw std::invalid_argument("Filename \"" + test_dir + "\" is not valid");
-		if (filename_is_valid(log_name)) throw std::invalid_argument("Filename \"" + log_name + "\" is not valid");
-
+		else std::filesystem::create_directories(m_LoggerSettings.log_dir);
+		m_IsRunning.store(false);
 	};
 
 	void LoggerImpl::write(const std::string& msg, MsgType&& type)
 	{
-		std::lock_guard<std::mutex> lock(m_WriteMutex);
-		m_LogEntries.push(LogEntry{ msg, type, get_current_time(), get_current_date() });
+		if (m_IsRunning.load())
+		{
+			std::lock_guard<std::mutex> lock(m_WriteMutex);
+			m_LogEntries.push(LogEntry{ msg, type, get_current_time(), get_current_date() });
+		}
 	}
 
-	void LoggerImpl::start() noexcept
+	void LoggerImpl::start()
 	{
-		m_IsStarted.store(true);
-		m_WriterThread.reset(new std::thread(&logger_impl::LoggerImpl::run, this));
+		if (!m_IsRunning.load())
+		{
+			m_IsRunning.store(true);
+			m_WriterThread.reset(new std::thread(&logger_impl::LoggerImpl::run, this));
+		}
 	}	
 
-	void LoggerImpl::stop() noexcept
+	void LoggerImpl::stop()
 	{
-		m_IsStarted.store(false);
-		m_WriterThread->join();
-		m_WriterThread.reset();
+		if (m_IsRunning.load())
+		{
+			m_IsRunning.store(false);
+			m_WriterThread->join();
+			m_WriterThread.reset();
+		}
 	}
 
-	bool LoggerImpl::is_started() const noexcept
+	bool LoggerImpl::is_running() const noexcept
 	{
-		return m_IsStarted.load();
+		return m_IsRunning.load();
 	}
 
 	LoggerSettings LoggerImpl::get_settings() const noexcept
@@ -66,37 +73,40 @@ namespace logger_impl
 
 	void LoggerImpl::run()
 	{
-		std::string prev_dir, prev_file_name;
-		std::string cur_dir, cur_file_name;
-		std::string log_msgs;
-		while (m_IsStarted.load())
+		while (m_IsRunning.load())
 		{
-			while (!m_LogEntries.empty())
-			{
-				std::lock_guard<std::mutex> lock(m_WriteMutex);
-
-				auto const& entry = m_LogEntries.front();
-				cur_dir = m_LoggerSettings.log_dir + "/" + entry.date;
-				cur_file_name = cur_dir + "/" + m_LoggerSettings.log_name;
-
-				if (cur_file_name == prev_file_name || prev_file_name == "")
-				{
-				}
-				else
-				{
-					std::filesystem::create_directories(prev_dir);
-					std::ofstream file(prev_file_name.c_str(), std::ofstream::app);
-					file << log_msgs;
-					file.close();
-					log_msgs = "";
-				}
-				log_msgs += entry.time + " " + get_msg_type_name(entry.type) + ":\t" + entry.msg + "\n";
-
-				prev_dir = cur_dir;
-				prev_file_name = cur_file_name;
-				m_LogEntries.pop();
-			}
+			flush_log_entries_to_file();
 			std::this_thread::sleep_for(m_LoggerSettings.logging_freq);
+		}
+		flush_log_entries_to_file();
+	}
+
+	void LoggerImpl::flush_log_entries_to_file()
+	{
+		std::lock_guard<std::mutex> lock(m_WriteMutex);
+		std::string dir, file_name;
+		std::string prev_date;
+		std::string log_msgs;
+
+		while (!m_LogEntries.empty())
+		{
+			auto const& entry = m_LogEntries.front();
+			log_msgs += entry.time + " " + get_msg_type_name(entry.type) + ":\t" + entry.msg + "\n";
+
+			dir = m_LoggerSettings.log_dir + "/" + entry.date;
+			file_name = dir + "/" + m_LoggerSettings.log_name;
+
+			if (m_LogEntries.size() == 1 || prev_date == entry.date)
+			{ // flush log_msgs into file
+				std::filesystem::create_directories(dir);
+				std::ofstream file(file_name.c_str(), std::ofstream::app);
+				file << log_msgs;
+				file.close();
+				log_msgs = "";
+			}
+
+			prev_date = entry.date;
+			m_LogEntries.pop();
 		}
 	}
 }
