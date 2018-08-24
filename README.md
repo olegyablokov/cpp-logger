@@ -1,6 +1,8 @@
 ## Getting started
 This is a fast, easy-to-use, thread-safe, standalone C++17 library for logging.
 
+[![Build Status](https://travis-ci.org/oyyablokov/cpp-logger.svg?branch=develop)](https://travis-ci.org/oyyablokov/cpp-logger)
+
 ## Usage
 To use the logger, do the following:
 
@@ -55,12 +57,12 @@ This project is distributed under MIT License which means you can freely use, co
 ## FAQ
 **Q: Cannot build the library. I get errors about filesystem like "fatal error: filesystem: No such file or directory compilation terminated.". What shall I do?**
 
-**A:** The library uses the `std::filesystem` which is currently (at the moment of writing this document) not available on many compilers and platforms (for example, MinGW is not supported AFAIK). If possible, consider upgrading your compiler or changing your compiler/platform.
+**A:** The library uses the `std::filesystem` which is currently (at the moment of writing this document) not available on many compilers and platforms. If possible, consider upgrading your compiler or changing your compiler/platform.
 <br><br>
 **Q: Is this logger thread-safe?**
 
 **A:** Yes, it is thread-safe: log entries are thread-safely stored in a container and once in a user-defined time interval logger's worker thread locks the container and writes its content to a file, then clears the container. Threads are managed with `std::thread`.
-
+<br><br>
 **Q: I want to use the compiled library directly OR I don't use CMake in my project. Is there a workaround?**
 
 **A:** Yes, you can compile the library and then use it directly. Just link it (in CMake you can do it with `target_link_libraries(<your_project_name>, path/to/<logger_lib>)`) and then include the `path/to/this/project/include/logger.h` header in your code.

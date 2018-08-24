@@ -48,9 +48,9 @@ TEST_CASE("Log files can be created in a subdirectory to the current directory",
 
 TEST_CASE("Log files can be created in a directory with absolute path", "[logger-filesystem]")
 {
-	std::string file_path = std::filesystem::temp_directory_path().string() + logger_impl::get_current_date() + "/";
+	std::string file_path = std::filesystem::temp_directory_path().string() + "/" + logger_impl::get_current_date() + "/";
 	std::string file_full_name = file_path + "test.log";
-
+	
 	auto log = Logger::create("test.log", std::filesystem::temp_directory_path().string(), std::chrono::milliseconds(10));
 	log->start();
 	log->write("Test log entry");
