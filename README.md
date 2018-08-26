@@ -1,7 +1,12 @@
 ## Getting started
 This is a fast, easy-to-use, thread-safe, standalone C++17 library for logging.
 
-[![Build Status](https://travis-ci.org/oyyablokov/cpp-logger.svg?branch=develop)](https://travis-ci.org/oyyablokov/cpp-logger)
+
+
+Operating system | Status
+---------------- | ----------
+Linux            | [![TravisCI](https://img.shields.io/travis/oyyablokov/cpp-logger/develop.svg)](https://travis-ci.org/ethereum/cpp-ethereum)
+Windows          | [![AppVeyor](https://img.shields.io/appveyor/ci/oyyablokov/cpp-logger/develop.svg)](https://ci.appveyor.com/project/oyyablokov/cpp-logger)
 
 ## Usage
 To use the logger, do the following:
@@ -36,7 +41,7 @@ The logger will create a `test.log` file under `./log/\<date\>/` directory and t
 ```
 
 ## Build
-The project is configured with [CMake](https://cmake.org/). To build the library, do the following:
+The project is configured with [CMake](https://cmake.org/). The building process may vary on different platforms and environments, though it follows the same following pattern:
 ```
 cd path/to/this/project; mkdir build; cd build          # Make a build directory.
 cmake ..    		                                # Generate a Makefile.

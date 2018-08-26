@@ -1,0 +1,17 @@
+os: Visual Studio 2017
+platform: x64
+test: off
+build_script:
+  - mkdir build
+  - cd build
+  - cmake -G "Visual Studio 15 2017 Win64" ..
+  - cd tests
+  - msbuild logger_tests.sln
+  - cd ../../
+test_script:
+  - cd bin/Debug
+  - logger_tests.exe
+branches:
+  only:
+    - develop
+    - master
