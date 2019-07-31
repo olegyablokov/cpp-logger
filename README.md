@@ -5,7 +5,7 @@ This is my implementation of a multithreading C++ library for logging.
 
 Operating system | Status
 ---------------- | ----------
-Linux            | [![TravisCI](https://img.shields.io/travis/oyyablokov/cpp-logger/develop.svg)](https://travis-ci.org/ethereum/cpp-ethereum)
+Linux            | [![TravisCI](https://img.shields.io/travis/oyyablokov/cpp-logger/develop.svg)](https://travis-ci.org/oyyablokov/cpp-logger)
 Windows          | [![AppVeyor](https://img.shields.io/appveyor/ci/oyyablokov/cpp-logger/develop.svg)](https://ci.appveyor.com/project/oyyablokov/cpp-logger)
 
 ## Usage
