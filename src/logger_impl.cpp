@@ -31,7 +31,12 @@ namespace logger_impl
 		if (log_dir == "") m_LoggerSettings.log_dir = ".";
 		else std::filesystem::create_directories(m_LoggerSettings.log_dir);
 		m_IsRunning.store(false);
-	};
+	}
+
+	LoggerImpl::~LoggerImpl()
+	{
+		stop();
+	}
 
 	void LoggerImpl::write(const std::string& msg, MsgType&& type)
 	{

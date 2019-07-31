@@ -20,6 +20,7 @@ SOFTWARE.
 #include <logger.h>
 #include "logger_impl.h"
 
-Logger* Logger::create(const std::string& log_name, const std::string& log_dir, std::chrono::milliseconds logging_freq) {
+Logger* Logger::create(const std::string& log_name, const std::string& log_dir, std::chrono::milliseconds logging_freq) 
+{
 	return new logger_impl::LoggerImpl(log_name, log_dir, logging_freq);
 }

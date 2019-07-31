@@ -7,9 +7,8 @@ build_script:
   - cmake -G "Visual Studio 15 2017 Win64" ..
   - cd tests
   - msbuild logger_tests.sln
-  - cd ../../
 test_script:
-  - cd bin/Debug
+  - cd build/bin/Debug
   - logger_tests.exe
 branches:
   only:

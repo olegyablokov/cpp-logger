@@ -74,7 +74,7 @@ public:
 	virtual void stop() = 0;
 
 	/**
-	* @brief The methods which returns true if logging is enabled and false otherwise.
+	* @brief The method which returns true if logging is enabled and false otherwise.
 	*/
 	virtual bool is_running() const noexcept = 0;
 

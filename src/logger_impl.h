@@ -44,12 +44,13 @@ namespace logger_impl
 		LoggerImpl(const std::string& log_name = "name.log",
 			const std::string& log_dir = ".",
 			std::chrono::milliseconds logging_freq = std::chrono::milliseconds(500));
-		virtual ~LoggerImpl() {};
+		virtual ~LoggerImpl();
 
 		virtual void write(const std::string& msg, MsgType&& type = MsgType::INFO) override;
 		virtual void start() override;
 		virtual void stop() override;
 		virtual bool is_running() const noexcept override;
+
 		virtual LoggerSettings get_settings() const noexcept override;
 
 	private:
@@ -60,7 +61,6 @@ namespace logger_impl
 		std::mutex m_WriteMutex;
 		std::queue<LogEntry> m_LogEntries;
 		std::atomic<bool> m_IsRunning;
-
 		LoggerSettings m_LoggerSettings;
 	};
 }

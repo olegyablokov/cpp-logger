@@ -17,7 +17,7 @@ install:
     - mkdir build && cd build && cmake .. && make logger_tests; 
 script:
     - ls
-    - cd ../bin && ./logger_tests
+    - cd bin && ./logger_tests
 notifications:
     email:true
 branches:
